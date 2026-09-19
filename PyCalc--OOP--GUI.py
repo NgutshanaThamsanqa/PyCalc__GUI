@@ -88,6 +88,9 @@ class MainWindow (QMainWindow):
         #create a string to store the calculation output
         self.expression = ""
 
+        #create a string object to hold the answer until = button has been clicked
+        self.previous_answer = ""
+
         #group number buttons using a list and link their response when clicked to number_pressed method
         number_buttons = [ button_1, button_2, button_3, button_6, button_7, button_8, button_11, button_12, button_13, button_16]
 
@@ -109,6 +112,7 @@ class MainWindow (QMainWindow):
         button_17.clicked.connect(self.decimal_pressed)
         button_4.clicked.connect(self.delete_pressed)
         button_5.clicked.connect(self.clear_pressed)
+        button_19.clicked.connect(self.answer_clicked)
         button_20.clicked.connect(self.equals_pressed)
     
     #link the basic operations with button clicked
@@ -155,6 +159,16 @@ class MainWindow (QMainWindow):
         self.expression = self.expression[:-1]
         self.answer_label.setText(self.expression if self.expression else "0")
 
+    #create clear button
+    def clear_pressed (self):
+        self.expression = "0"
+        self.answer_label.setText(self.expression)
+
+    #create a button that retrieves the recent answer
+    def answer_clicked (self):
+        self.expression += self.previous_answer
+        self.answer_label.setText(self.expression)
+
     def equals_pressed(self):
         try:
             #replace calculator's multiplication symbol with Python's
@@ -163,6 +177,7 @@ class MainWindow (QMainWindow):
             result = eval(expression)                       #calculate the expression
 
             self.expression = str(result)                   #store the result as a string object
+            self.previous_answer = self.expression          #store the previous answer
             self.answer_label.setText(self.expression)      #display the result
 
         except Exception:
